@@ -19,6 +19,7 @@
 	import type { PullRequest } from '$lib/github/types';
 	import type { Persisted } from '$lib/persisted/persisted';
 	import { goto } from '$app/navigation';
+	import { openExternalUrl } from '$lib/utils/url';
 
 	export let uncommittedChanges = 0;
 	export let isUnapplied = false;
@@ -73,7 +74,8 @@
 	async function createPr(createPrOpts: CreatePrOpts): Promise<PullRequest | undefined> {
 		const opts = { ...defaultPrOpts, ...createPrOpts };
 		if (!githubService.isEnabled) {
-			toast.error('Cannot create PR without GitHub credentials');
+            openExternalUrl(`${$baseBranch.repoBaseUrl}/merge_requests/new?merge_request%5Bsource_branch%5D=${encodeURIComponent(branch.name)}&merge_request%5Btarget_branch%5D=${$baseBranch.shortName}`)
+			// toast.error('Cannot create PR without GitHub credentials');
 			return;
 		}
 
